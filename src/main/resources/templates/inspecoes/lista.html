@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{fragments/layout :: layout('Inspeções', ~{::section})}">
+    <section>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1 class="h3 mb-0">Operação mestre/detalhe - Inspeções</h1>
+                <p class="text-muted mb-0">Cadastre a inspeção e, em seguida, inclua itens detalhados com os focos encontrados.</p>
+            </div>
+            <a class="btn btn-primary" th:href="@{/inspecoes/nova}">
+                <i class="bi bi-clipboard2-plus me-1"></i>Nova inspeção
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Morador</th>
+                    <th>Agente</th>
+                    <th>Status</th>
+                    <th class="text-center">Itens</th>
+                    <th class="text-center">Risco total</th>
+                    <th style="width: 150px;">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="inspecao : ${lista}">
+                    <td th:text="${#temporals.format(inspecao.data, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${inspecao.morador != null ? inspecao.morador.nome : '-'}"></td>
+                    <td th:text="${inspecao.agente != null ? inspecao.agente.nome : '-'}"></td>
+                    <td>
+                        <span class="badge bg-primary" th:text="${inspecao.status}"></span>
+                    </td>
+                    <td class="text-center" th:text="${inspecao.itens.size()}">0</td>
+                    <td class="text-center fw-bold" th:text="${inspecao.totalRisco}">0</td>
+                    <td>
+                        <div class="btn-group btn-group-sm w-100">
+                            <a class="btn btn-outline-secondary" th:href="@{'/inspecoes/editar/' + ${inspecao.id}}">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a class="btn btn-outline-danger" th:href="@{'/inspecoes/excluir/' + ${inspecao.id}}"
+                               onclick="return confirm('Excluir inspeção?');">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${lista.empty}">
+                    <td colspan="7" class="text-center text-muted">Nenhuma inspeção cadastrada.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</th:block>
+</html>
