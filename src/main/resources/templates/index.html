@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{fragments/layout :: layout('Painel Zoonotrack', ~{::section})}">
+    <section>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-1">Painel Zoonotrack</h1>
+                <p class="text-muted mb-0">Acompanhe o status geral das operações de vigilância zoonótica.</p>
+            </div>
+            <a class="btn btn-outline-primary" th:href="@{/relatorios}">
+                <i class="bi bi-graph-up me-1"></i>Relatórios
+            </a>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <div class="text-uppercase small">Moradores</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2 class="fw-bold mb-0" th:text="${totalMoradores}">0</h2>
+                            <i class="bi bi-people-fill display-6"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body">
+                        <div class="text-uppercase small">Animais</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2 class="fw-bold mb-0" th:text="${totalAnimais}">0</h2>
+                            <i class="bi bi-paw-fill display-6"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info">
+                    <div class="card-body">
+                        <div class="text-uppercase small">Agentes</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2 class="fw-bold mb-0" th:text="${totalAgentes}">0</h2>
+                            <i class="bi bi-shield-plus display-6"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning">
+                    <div class="card-body">
+                        <div class="text-uppercase small">Inspeções</div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2 class="fw-bold mb-0" th:text="${totalInspecoes}">0</h2>
+                            <i class="bi bi-clipboard-check display-6"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Últimas inspeções</span>
+                <a th:href="@{/inspecoes}" class="btn btn-sm btn-outline-secondary">Ver todas</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Morador</th>
+                        <th>Agente</th>
+                        <th>Status</th>
+                        <th class="text-center">Itens</th>
+                        <th class="text-center">Risco</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="inspecao : ${ultimasInspecoes}">
+                        <td th:text="${#temporals.format(inspecao.data, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${inspecao.morador != null ? inspecao.morador.nome : '-'}"></td>
+                        <td th:text="${inspecao.agente != null ? inspecao.agente.nome : '-'}"></td>
+                        <td><span class="badge bg-secondary" th:text="${inspecao.status}"></span></td>
+                        <td class="text-center" th:text="${inspecao.itens.size()}"></td>
+                        <td class="text-center fw-bold" th:text="${inspecao.totalRisco}"></td>
+                    </tr>
+                    <tr th:if="${ultimasInspecoes.empty}">
+                        <td colspan="6" class="text-center text-muted">Nenhuma inspeção registrada.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</th:block>
+</html>

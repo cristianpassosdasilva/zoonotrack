@@ -1,7 +1,7 @@
 package com.zoonotrack.controller;
 
-import com.zoonotrack.model.Morador;
-import com.zoonotrack.service.MoradorService;
+import com.zoonotrack.model.AgenteSaude;
+import com.zoonotrack.service.AgenteSaudeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,41 +13,41 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/moradores")
-public class MoradorController {
+@RequestMapping("/agentes")
+public class AgenteSaudeController {
 
     @Autowired
-    private MoradorService service;
+    private AgenteSaudeService service;
 
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("lista", service.listarTodos());
-        return "moradores/lista";
+        return "agentes/lista";
     }
 
     @GetMapping("/novo")
     public String novo(Model model) {
-        model.addAttribute("morador", new Morador());
-        return "moradores/form";
-    }
-
-    @PostMapping
-    public String salvar(@ModelAttribute Morador morador, RedirectAttributes redirectAttributes) {
-        service.salvar(morador);
-        redirectAttributes.addFlashAttribute("mensagem", "Morador salvo com sucesso!");
-        return "redirect:/moradores";
+        model.addAttribute("agente", new AgenteSaude());
+        return "agentes/form";
     }
 
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
-        model.addAttribute("morador", service.buscarPorId(id));
-        return "moradores/form";
+        model.addAttribute("agente", service.buscarPorId(id));
+        return "agentes/form";
+    }
+
+    @PostMapping
+    public String salvar(@ModelAttribute AgenteSaude agente, RedirectAttributes redirectAttributes) {
+        service.salvar(agente);
+        redirectAttributes.addFlashAttribute("mensagem", "Agente salvo com sucesso!");
+        return "redirect:/agentes";
     }
 
     @GetMapping("/excluir/{id}")
     public String excluir(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         service.excluir(id);
-        redirectAttributes.addFlashAttribute("mensagem", "Morador excluído.");
-        return "redirect:/moradores";
+        redirectAttributes.addFlashAttribute("mensagem", "Agente excluído.");
+        return "redirect:/agentes";
     }
 }

@@ -1,52 +1,49 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Cadastro de Morador</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="container mt-4">
+<th:block th:replace="~{fragments/layout :: layout('Cadastro de Morador', ~{::section})}">
+    <section>
+        <h1 class="h3 mb-4" th:text="${morador.id == null ? 'Novo morador' : 'Edição do morador'}"></h1>
 
-<h1>Cadastro de Morador</h1>
+        <form th:action="@{/moradores}" th:object="${morador}" method="post" class="row g-3">
+            <input type="hidden" th:field="*{id}">
 
-<form th:action="@{/moradores}" th:object="${morador}" method="post" class="mt-3">
+            <div class="col-md-8">
+                <label class="form-label">Nome completo*</label>
+                <input type="text" th:field="*{nome}" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Telefone</label>
+                <input type="text" th:field="*{telefone}" class="form-control" placeholder="(00) 00000-0000">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Bairro*</label>
+                <input type="text" th:field="*{bairro}" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Rua</label>
+                <input type="text" th:field="*{rua}" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Número</label>
+                <input type="text" th:field="*{numero}" class="form-control">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">CEP</label>
+                <input type="text" th:field="*{cep}" class="form-control" placeholder="00000-000">
+            </div>
+            <div class="col-12">
+                <label class="form-label">Histórico / observações de risco</label>
+                <textarea th:field="*{observacaoRiscoHistorico}" class="form-control" rows="3"
+                          placeholder="Ex.: Risco de foco de roedores no quintal"></textarea>
+            </div>
 
-    <input type="hidden" th:field="*{id}" />
-
-    <div class="mb-3">
-        <label class="form-label">Nome:</label>
-        <input type="text" th:field="*{nome}" class="form-control" required />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Telefone:</label>
-        <input type="text" th:field="*{telefone}" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Bairro:</label>
-        <input type="text" th:field="*{bairro}" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Rua:</label>
-        <input type="text" th:field="*{rua}" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Número:</label>
-        <input type="text" th:field="*{numero}" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">CEP:</label>
-        <input type="text" th:field="*{cep}" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-success">Salvar</button>
-    <a th:href="@{/moradores}" class="btn btn-secondary ms-2">Voltar</a>
-
-</form>
-
-</body>
+            <div class="col-12 d-flex gap-2 mt-3">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check2-circle me-1"></i>Salvar
+                </button>
+                <a th:href="@{/moradores}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </section>
+</th:block>
 </html>

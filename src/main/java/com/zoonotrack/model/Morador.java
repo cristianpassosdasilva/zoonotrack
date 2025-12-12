@@ -1,9 +1,16 @@
 package com.zoonotrack.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
 @Entity
 public class Morador {
 
@@ -20,4 +27,10 @@ public class Morador {
 
     @Column(length = 500)
     private String observacaoRiscoHistorico;
+
+    @OneToMany(mappedBy = "morador", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Animal> animais = new ArrayList<>();
+
+    @OneToMany(mappedBy = "morador")
+    private List<Inspecao> inspecoes = new ArrayList<>();
 }
