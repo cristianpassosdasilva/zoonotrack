@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{fragments/layout :: layout('Gestão de inspeções', ~{::section})}">
+    <section>
+        <h1 class="h3 mb-4">Inspeção sanitária</h1>
+
+        <form th:action="@{/inspecoes}" th:object="${inspecao}" method="post" class="row g-3 mb-4">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="col-md-3">
+                <label class="form-label">Data*</label>
+                <input type="date" th:field="*{data}" class="form-control" required>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Status*</label>
+                <select class="form-select" th:field="*{status}" required>
+                    <option th:each="st : ${status}" th:value="${st}" th:text="${st}"></option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Morador</label>
+                <select class="form-select" th:field="*{morador}">
+                    <option value="">Selecione</option>
+                    <option th:each="m : ${moradores}" th:value="${m.id}" th:text="${m.nome}"></option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Agente responsável</label>
+                <select class="form-select" th:field="*{agente}">
+                    <option value="">Selecione</option>
+                    <option th:each="a : ${agentes}" th:value="${a.id}" th:text="${a.nome}"></option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Observações gerais</label>
+                <textarea class="form-control" rows="3" th:field="*{observacoesGerais}"></textarea>
+            </div>
+
+            <div class="col-12 d-flex gap-2">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-save me-1"></i>Salvar inspeção
+                </button>
+                <a th:href="@{/inspecoes}" class="btn btn-secondary">Voltar para lista</a>
+            </div>
+        </form>
+
+        <div th:if="${inspecao.id != null}">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h2 class="h4 mb-0">Itens da inspeção</h2>
+                <span class="badge bg-warning text-dark">
+                    Risco total: <span th:text="${inspecao.totalRisco}"></span>
+                </span>
+            </div>
+
+            <div class="table-responsive mb-3">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Descrição</th>
+                        <th>Animal</th>
+                        <th>Recomendação</th>
+                        <th class="text-center">Nível</th>
+                        <th style="width: 100px;">Ações</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${inspecao.itens}">
+                        <td th:text="${item.tipoFoco}"></td>
+                        <td th:text="${item.descricao}"></td>
+                        <td th:text="${item.animal != null ? item.animal.nome : 'N/A'}"></td>
+                        <td th:text="${item.recomendacao}"></td>
+                        <td class="text-center fw-bold" th:text="${item.nivelRisco}"></td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-danger w-100"
+                               th:href="@{'/inspecoes/' + ${inspecao.id} + '/itens/' + ${item.id} + '/excluir'}"
+                               onclick="return confirm('Remover item?');">
+                                Remover
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${inspecao.itens.empty}">
+                        <td colspan="6" class="text-center text-muted">Nenhum item cadastrado.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    Novo item
+                </div>
+                <div class="card-body">
+                    <form th:action="@{'/inspecoes/' + ${inspecao.id} + '/itens'}"
+                          th:object="${novoItem}"
+                          method="post" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Tipo de foco*</label>
+                            <select class="form-select" th:field="*{tipoFoco}" required>
+                                <option value="">Selecione</option>
+                                <option th:each="tipo : ${tiposFoco}" th:value="${tipo}" th:text="${tipo}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label">Descrição*</label>
+                            <input type="text" class="form-control" th:field="*{descricao}" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Nível (0-10)*</label>
+                            <input type="number" class="form-control" th:field="*{nivelRisco}" min="0" max="10" value="1" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Animal associado</label>
+                            <select class="form-select" th:field="*{animal.id}">
+                                <option value="">Sem vínculo</option>
+                                <option th:each="animal : ${animaisMorador}" th:value="${animal.id}" th:text="${animal.nome}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label">Recomendação</label>
+                            <input type="text" class="form-control" th:field="*{recomendacao}">
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="bi bi-plus-circle me-1"></i>Adicionar item
+                            </button>
+                        </div>
+                    </form>
+                    <div th:if="${animaisMorador.empty}" class="text-muted mt-2">
+                        *Cadastre animais para o morador selecionado e facilite o vínculo dos itens.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:if="${inspecao.id == null}" class="alert alert-info">
+            Salve a inspeção para habilitar o cadastro dos itens (detalhes).
+        </div>
+    </section>
+</th:block>
+</html>
