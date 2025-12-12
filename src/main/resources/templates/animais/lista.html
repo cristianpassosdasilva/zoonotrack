@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{fragments/layout :: layout('Animais monitorados', ~{::section})}">
+    <section>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h1 class="h3 mb-0">Animais monitorados</h1>
+                <p class="text-muted mb-0">Controle os animais associados a cada morador para agilizar as inspeções.</p>
+            </div>
+            <a class="btn btn-primary" th:href="@{/animais/novo}">
+                <i class="bi bi-plus-circle me-1"></i>Novo Animal
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                <tr>
+                    <th>Animal</th>
+                    <th>Espécie</th>
+                    <th>Responsável</th>
+                    <th class="text-center">Vacinado</th>
+                    <th class="text-center">Microchip</th>
+                    <th style="width: 140px;">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="animal : ${lista}">
+                    <td>
+                        <strong th:text="${animal.nome}"></strong>
+                        <div class="small text-muted"
+                             th:text="${animal.dataNascimento != null ? #temporals.format(animal.dataNascimento, 'dd/MM/yyyy') : 'Sem data'}"></div>
+                    </td>
+                    <td th:text="${animal.especie}"></td>
+                    <td th:text="${animal.morador != null ? animal.morador.nome : 'Sem morador'}"></td>
+                    <td class="text-center">
+                        <i th:classappend="${animal.vacinado} ? 'bi-check-circle-fill text-success' : 'bi-dash text-muted'"
+                           class="bi"></i>
+                    </td>
+                    <td class="text-center">
+                        <i th:classappend="${animal.microchipado} ? 'bi-check-circle-fill text-success' : 'bi-dash text-muted'"
+                           class="bi"></i>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm w-100">
+                            <a class="btn btn-outline-primary" th:href="@{'/animais/editar/' + ${animal.id}}">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a class="btn btn-outline-danger" th:href="@{'/animais/excluir/' + ${animal.id}}"
+                               onclick="return confirm('Excluir animal?');">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${lista.empty}">
+                    <td colspan="6" class="text-center text-muted">Nenhum animal cadastrado.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</th:block>
+</html>
