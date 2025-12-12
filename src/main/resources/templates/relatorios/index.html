@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{fragments/layout :: layout('Relatórios gerenciais', ~{::section})}">
+    <section>
+        <h1 class="h3 mb-4">Relatórios rápidos</h1>
+
+        <div class="row g-4 align-items-stretch">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header">
+                        <div class="fw-semibold">Top moradores com mais animais</div>
+                        <small class="text-muted">Ajuda a identificar residências com maior potencial zoonótico.</small>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table mb-0 align-middle">
+                            <thead>
+                            <tr>
+                                <th style="width: 70px;">Ranking</th>
+                                <th>Morador</th>
+                                <th class="text-end">Animais</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item, stat : ${moradoresTop}">
+                                <td>
+                                    <span class="badge rounded-pill bg-secondary-subtle text-dark">
+                                        <span th:text="${stat.count}"></span>º
+                                    </span>
+                                </td>
+                                <td th:text="${item.nome()}"></td>
+                                <td class="text-end">
+                                    <span class="fw-bold" th:text="${item.totalAnimais()}"></span>
+                                    <small class="text-muted">animais</small>
+                                </td>
+                            </tr>
+                            <tr th:if="${moradoresTop.empty}">
+                                <td colspan="3" class="text-center text-muted py-4">Sem dados suficientes.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header">
+                        <div class="fw-semibold">Agentes com mais inspeções</div>
+                        <small class="text-muted">Distribuição de trabalho da equipe de campo.</small>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table mb-0 align-middle">
+                            <thead>
+                            <tr>
+                                <th style="width: 70px;">Ranking</th>
+                                <th>Agente</th>
+                                <th class="text-end">Inspeções</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item, stat : ${agentesTop}">
+                                <td>
+                                    <span class="badge rounded-pill bg-secondary-subtle text-dark">
+                                        <span th:text="${stat.count}"></span>º
+                                    </span>
+                                </td>
+                                <td th:text="${item.nome()}"></td>
+                                <td class="text-end">
+                                    <span class="badge bg-success" th:text="${item.totalInspecoes()}"></span>
+                                </td>
+                            </tr>
+                            <tr th:if="${agentesTop.empty}">
+                                <td colspan="3" class="text-center text-muted py-4">Sem dados suficientes.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header">
+                        <div class="fw-semibold">Inspeções com maior risco</div>
+                        <small class="text-muted">Priorização de retornos e acompanhamento.</small>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table mb-0 align-middle">
+                            <thead>
+                            <tr>
+                                <th style="width: 70px;">Ranking</th>
+                                <th>Morador / data</th>
+                                <th class="text-end">Risco</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="item, stat : ${inspecoesRisco}">
+                                <td>
+                                    <span class="badge rounded-pill bg-secondary-subtle text-dark">
+                                        <span th:text="${stat.count}"></span>º
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold" th:text="${item.morador()}"></div>
+                                    <small class="text-muted" th:text="${#temporals.format(item.data(), 'dd/MM/yyyy')}"></small>
+                                </td>
+                                <td class="text-end">
+                                    <span class="badge bg-danger" th:text="${item.totalRisco()}"></span>
+                                </td>
+                            </tr>
+                            <tr th:if="${inspecoesRisco.empty}">
+                                <td colspan="3" class="text-center text-muted py-4">Nenhuma inspeção registrada.</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+</html>
